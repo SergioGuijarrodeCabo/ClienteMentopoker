@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using ClienteMentopoker.Models;
+using ClienteMentopoker.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoMentopoker.Models;
@@ -12,11 +14,12 @@ namespace ProyectoMentopoker.Controllers
     {
         private readonly ILogger<LoginController> _logger;
         private RepositoryLogin repoLogin;
-
-        public LoginController(ILogger<LoginController> logger, RepositoryLogin repoLogin)
+        private ServiceApiMentopoker service;
+        public LoginController(ILogger<LoginController> logger, RepositoryLogin repoLogin, ServiceApiMentopoker service)
         {
             this.repoLogin = repoLogin;
             _logger = logger;
+            this.service = service;
 
         }
 
@@ -44,40 +47,58 @@ namespace ProyectoMentopoker.Controllers
         public async Task<IActionResult> Index(string email, string password)
         {
 
-            UsuarioModel usuario = this.repoLogin.Login(email, password);
+            //UsuarioModel usuario = this.repoLogin.Login(email, password);
+
+            UsuarioRequest usuario = await this.service.GetTokenAsync(email, password);
 
             if (usuario != null)
             {
-                ClaimsIdentity identity =
+                //string token =
+                //await this.service.GetTokenAsync(email, password);
 
-                 new ClaimsIdentity
+                if (usuario.Token == null)
+                {
+                    ViewData["MENSAJE"] = "Usuario/Password incorrectos";
+                    return View();
+                }
+                else
+                {
+                    HttpContext.Session.SetString("TOKEN", usuario.Token);
 
-                 (CookieAuthenticationDefaults.AuthenticationScheme,
+                    ClaimsIdentity identity =
 
-                 ClaimTypes.Email, ClaimTypes.Role);
+                     new ClaimsIdentity
 
-                Claim claimEmail = new Claim(ClaimTypes.Name, usuario.Email);
-                Claim claimRol = new Claim(ClaimTypes.Role, usuario.Rol);
-                Claim claimID =new Claim("ID", usuario.Usuario_id.ToString());
-                Claim clamNombre = new Claim("NOMBRE", usuario.Nombre.ToString());
+                     (CookieAuthenticationDefaults.AuthenticationScheme,
 
-                identity.AddClaim(claimEmail);
-                identity.AddClaim(claimRol);
-                identity.AddClaim(claimID);
-                identity.AddClaim(clamNombre);
+                     ClaimTypes.Email, ClaimTypes.Role);
 
-                ClaimsPrincipal userPrincipal =
+                    Claim claimEmail = new Claim(ClaimTypes.Name, usuario.Email);
+                    Claim claimRol = new Claim(ClaimTypes.Role, usuario.Rol);
+                    Claim claimID = new Claim("ID", usuario.Usuario_id.ToString());
+                    Claim clamNombre = new Claim("NOMBRE", usuario.Nombre.ToString());
 
-                new ClaimsPrincipal(identity);
+                    identity.AddClaim(claimEmail);
+                    identity.AddClaim(claimRol);
+                    identity.AddClaim(claimID);
+                    identity.AddClaim(clamNombre);
 
-                await HttpContext.SignInAsync
+                    ClaimsPrincipal userPrincipal =
 
-                (CookieAuthenticationDefaults.AuthenticationScheme
+                    new ClaimsPrincipal(identity);
 
-                , userPrincipal);
+                    await HttpContext.SignInAsync
 
-                //return RedirectToAction("PerfilUsuarios", "Perfil");
-                return RedirectToAction("Index", "Home");
+                    (CookieAuthenticationDefaults.AuthenticationScheme
+
+                    , userPrincipal);
+
+                    //return RedirectToAction("PerfilUsuarios", "Perfil");
+
+
+
+                    return RedirectToAction("Index", "Home");
+                }
             }
 
             else

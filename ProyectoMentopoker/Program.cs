@@ -1,3 +1,4 @@
+using ClienteMentopoker.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ProyectoMentopoker.Data;
@@ -22,7 +23,7 @@ builder.Services.AddDbContext<MentopokerContext>
 
 //builder.Services.AddDbContext<MentopokerContext>
 //    (options => options.UseSqlServer(@"Data Source=DESKTOP-E38C8U3;Initial Catalog=PROYECTOMENTOPOKER;User ID=sa;Password=MCSD2022";));
-
+builder.Services.AddTransient<ServiceApiMentopoker>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClienteMentopoker.Services;
+using Microsoft.AspNetCore.Mvc;
 using ProyectoMentopoker.Filters;
 using ProyectoMentopoker.Models;
 using ProyectoMentopoker.Repositories;
@@ -9,15 +10,17 @@ namespace ProyectoMentopoker.Controllers
     {
 
         private RepositoryTablas repoTablas;
+        private ServiceApiMentopoker service;
 
-        public PartidaConTablaController()
+        public PartidaConTablaController(ServiceApiMentopoker service)
         {
             this.repoTablas = new RepositoryTablas();
+            this.service = service;
 
         }
 
 
-        [AuthorizeUsers]
+        //[AuthorizeUsers]
         public IActionResult Jugar()
         {
 
@@ -25,10 +28,13 @@ namespace ProyectoMentopoker.Controllers
         }
 
         [HttpPost]
-        public List<Celda> Jugar(int id)
+        public async Task<List<Celda>> Jugar(int id)
         {
+            string token =
+             HttpContext.Session.GetString("TOKEN");
 
-            List<Celda> tabla = this.repoTablas.GetTabla(id);
+            //List<Celda> tabla = this.repoTablas.GetTabla(id);
+            List<Celda> tabla = await this.service.GetTablaAsync(token, id);
             return tabla;
         }
 

@@ -19,6 +19,8 @@
               <img src="~/images/perfil.jpg"
                 alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
                             <h5>@Context.User.FindFirst("NOMBRE")?.Value</h5>
+
+                            <h5>@Context.Session.GetString("TOKEN")</h5>
               <p>Usuario</p>
               <i class="far fa-edit mb-5"></i>
             </div>
