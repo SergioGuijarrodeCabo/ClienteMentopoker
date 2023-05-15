@@ -1,0 +1,339 @@
+﻿@model EstadisticasPartidas
+
+<!doctype html>
+<html lang="en">
+<head>
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/NavBar.css" rel="stylesheet">
+
+
+
+
+
+    <div class="container" id="encabezado" style="text-align:center">
+
+        
+
+        <!-- Custom styles for this template -->
+        <link href="~/css/navbar-top-fixed.css" rel="stylesheet">
+</head>
+<body>
+    <style>
+
+        .container {
+            background-color: transparent !important;
+        }
+
+        .container > div {
+            background-color: #212529 !important;
+        }
+
+        .table-wrapper {
+            max-height: 50vh;
+            overflow-y: auto;
+             overflow-x: auto;
+        }
+
+         .formCalendario {
+          background-color: #212529;
+          padding: 20px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .galeria{
+          display: none !important;
+        }
+
+        .show-galeria {
+            display: inline !important;
+        }
+
+
+    </style>
+
+
+
+    <div class="container">
+        
+        
+
+           <form method="POST" id="selectorFecha"  class="formCalendario" >
+          <div class="form-group">
+            <label for="start_date">Start Date:</label>
+            <input type="date" class="form-control" name="fechaInicio">
+          </div>
+          <div class="form-group">
+            <label for="end_date">End Date:</label>
+            <input type="date" class="form-control" name="fechaFinal">
+          </div>
+          <input type="hidden" name="cell_id" id="cell_id">
+          <button class="btn btn-info" id="bJugada">MOSTRAR PARTIDAS</button>
+        </form>
+
+        @if (Model != null)
+        {
+            <table class="table table-dark table-hover " style="padding:30px;">
+                <tbody>
+                    <tr><th>  <p style="color:white;">Cash inicial partidas: @Math.Round(Model.CashInicialPartidas, 2)$</p></th></tr>
+                    <tr><th> <p style="color:white;">Cash final partidas: @Math.Round(Model.CashFinalPartidas, 2)$</p></th></tr>
+                    <tr><th> <p style="color:white;">Media ganancias partidas: @Math.Round(Model.MediaGananciasPartidas,2)$</p></th></tr>
+                    <tr><th><p style="color:white;">Rentabilidad partidas: @Math.Round(Model.RentabilidadPartidas,2) %</p></th></tr>
+                </tbody>
+            </table>       
+            
+        }
+
+        @if (Model != null)
+        {
+
+            <div class="table-wrapper" style="padding:50px; height: 600px; overflow: auto;">
+
+            <table class="table table-dark table-hover ">
+                <thead>
+                    <tr>
+                        <th>Partida_id</th>
+                        <th>Cash_Inicial</th>
+                        <th>Cash_Final</th>
+                        <th>Fecha</th>
+                        <th>Comentarios</th>
+                        <th>Usuario_id</th>
+                        <th>Rondas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.partidas.Partidas.Count; i += 1)
+                    {
+                        <tr id="@Model.partidas.Partidas[i].Partida_id">
+                            <td>@Html.DisplayFor(model =>model.partidas.Partidas[i].Partida_id)</td>
+                            <td>@Html.DisplayFor(model => model.partidas.Partidas[i].Cash_Inicial)</td>
+                            <td>@Html.DisplayFor(model => model.partidas.Partidas[i].Cash_Final)</td>
+                            <td>@Html.DisplayFor(model =>model.partidas.Partidas[i].Fecha)</td>
+                            <td>@Html.DisplayFor(model => model.partidas.Partidas[i].Comentarios)</td>
+                            <td>@Html.DisplayFor(model => model.partidas.Partidas[i].Usuario_id)</td>
+                            <td> <button class="btn btn-primary my-2"  onclick="verRondas(@Model.partidas.Partidas[i].Partida_id)" id="botonRondas">Ver rondas</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>
+
+
+
+
+            <div class="table-wrapper" style="padding:50px;">
+                <table class="table table-dark table-hover " id="rondas-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Ronda_id</th>
+                        <th>Cantidad_Jugada</th>
+                        <th>Ganancias</th>
+                        <th>Partida_id</th>
+                        <th>Jugadas</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                        @for (var i = 0; i < Model.partidas.Rondas.Count; i += 1)
+                    {
+                               <tr data-partida-id="@Model.partidas.Rondas[i].Partida_id">     
+                                <td>@Html.DisplayFor(model =>model.partidas.Rondas[i].Ronda_id)</td>
+                                <td>@Html.DisplayFor(model => model.partidas.Rondas[i].Cantidad_jugada)</td>
+                                <td>@Html.DisplayFor(model => model.partidas.Rondas[i].Ganancias)</td>
+                                <td>@Html.DisplayFor(model =>model.partidas.Rondas[i].Partida_id)</td>
+                            <td>
+                                    <button class="btn btn-primary my-2" onclick="verJugadas(@Model.partidas.Rondas[i].Ronda_id)" id="botonJugadas">Ver jugada</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+            </div>
+
+
+
+            <div class="table-wrapper" style="padding:50px;">
+                <table class="table table-dark table-hover  " id="jugadas-table" style="display:none;">
+                <thead>
+                    <tr>
+                            <th>Jugada_id</th>
+                            <th>Jugada Preflop</th>
+                            <th>Cantidad jugada</th>
+                            <th>Seguimiento Tabla</th>
+                            <th>Mano</th>
+           
+                            <th>Condicion</th>
+                            <th>Ronda_id</th>
+                            <th>Ganancias</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                        @for (var i = 0; i < Model.partidas.Jugadas.Count; i += 1)
+                    {
+                            <tr data-ronda-id="@Model.partidas.Jugadas[i].Ronda_id">         
+                                <td>@Html.DisplayFor(model =>model.partidas.Jugadas[i].Jugada_id)</td>
+                                <td>@Html.DisplayFor(model => model.partidas.Jugadas[i].Cantidad_jugada_Preflop)</td>
+                                <td>@Html.DisplayFor(model => model.partidas.Jugadas[i].Cantidad_jugada)</td>
+                                <td>@Html.DisplayFor(model => model.partidas.Jugadas[i].Seguimiento_Tabla)</td>
+                                <td><div class="image-gallery d-flex align-items-center justify-content-around galeria" id="gallery_@Model.partidas.Jugadas[i].Ronda_id" data-info="@Model.partidas.Jugadas[i].Cell_id">
+                                    <img src="" class="gallery-image shadow-1-strong rounded" style="height:35px;" id="carta1_@Model.partidas.Jugadas[i].Cell_id" />
+                                    <img src="" class="gallery-image shadow-1-strong rounded" style="height:35px;" id="carta2_@Model.partidas.Jugadas[i].Cell_id" />
+                                </div></td>
+                                <td>@Html.DisplayFor(model =>model.partidas.Jugadas[i].Condicion)</td>
+                                <td>@Html.DisplayFor(model =>model.partidas.Jugadas[i].Ronda_id)</td>
+                                <td>@Html.DisplayFor(model =>model.partidas.Jugadas[i].Ganancias)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>
+        }
+
+
+    </div>
+</body>
+
+
+
+@section scripts { 
+    <script>
+
+
+
+        var ultimaRonda = "";
+     
+        var ultimaPartida = "";
+
+
+        function mostrarPartidas(){
+            document.getElementById('rondas-table').style.display = "none";
+            document.getElementById('jugadas-table').style.display = "none";
+        }
+
+
+      
+
+        function verRondas(partidaId) {
+            mostrarPartidas();
+            if(ultimaPartida != "") {
+            $('#rondas_' + ultimaPartida).removeClass('show-rondas');
+            }
+
+            // Hide all rows in the rondas table
+            document.getElementById('rondas-table').style.display = "inline";
+
+            // Show only the rows associated with the selected partida
+            $('#rondas-table tbody tr').hide();
+            $('#rondas-table tbody tr[data-partida-id="' + partidaId + '"]').show();
+
+            // Set the ultimaPartida variable to the selected partida ID
+            ultimaPartida = partidaId;
+
+            // Show the rondas associated with the selected partida
+            $('#rondas_' + partidaId).addClass('show-rondas');
+            }
+
+
+             function verJugadas(rondaId) {
+               
+            if(ultimaRonda !=""){
+            $('#gallery_' + ultimaRonda).removeClass('show-galeria');}
+        
+            // Hide all rows in the jugadas table
+            document.getElementById('jugadas-table').style.display = "inline";
+ 
+            $('#jugadas-table tbody tr').hide();
+            // Show only the rows associated with the selected ronda
+            $('#jugadas-table tbody tr[data-ronda-id="' + rondaId + '"]').show();
+              // Get the ronda_id from the button's data attribute
+            //var rondaId = $(this).data('ronda-id');
+            // Hide all rows in the jugadas table
+            $('#jugadas-table tbody tr').hide();
+            // Show only the rows associated with the selected ronda
+            $('#jugadas-table tbody tr[data-ronda-id="' + rondaId + '"]').show();
+            //ESTO ES PARA ESPERAR A QUE CARGE LA TABLA SIGUIENTE Y ASÍ SE PUEDEN GENERAR LAS CARTAS
+            setTimeout(function () {
+              
+            }, 100);
+            var gallery = $('#gallery_' + rondaId);
+            var cellId = gallery.data('info');
+              
+                // Get the cell ID from the gallery ID
+            //alert(info);
+                var strInicial = cellId.toString();
+  
+            //alert(strInicial);
+            if (strInicial.length === 3) {
+                 
+                 var subString1 = strInicial.substring(0, 1);
+                var subString2 = strInicial.substring(1, 2);
+                var subString3 = strInicial.substring(2, 3);
+                var src1 = "/images/cartas/";
+                var src2 = "/images/cartas/";
+                if (subString1 == 'T') {
+                    subString1 = '10';
+                }
+                if (subString2 == 'T') {
+                    subString2 = '10';
+                }
+                if (subString3 == 's') {
+                    src1 += subString1 + "R.png";
+                    src2 += subString2 + "R.png";
+                } else {
+                    src1 += subString1 + "N.png";
+                    src2 += subString2 + "R.png";
+                }
+
+                  
+            } else {
+                
+                var subString1 = strInicial.substring(0, 1);
+                var subString2 = strInicial.substring(1, 2);
+           
+             
+                var src1 = "/images/cartas/";
+                var src2 = "/images/cartas/";
+                src1 += subString1 + "R.png";
+                src2 += subString2 + "R.png";
+    
+         
+            }
+           
+               
+            gallery.find('#carta1_' + cellId).attr('src', src1); // Set the src attribute for the first image
+            gallery.find('#carta2_' + cellId).attr('src', src2); // Set the src attribute for the second image
+            gallery.addClass('show-galeria');
+            ultimaRonda = rondaId;
+        }
+
+   
+
+
+
+    </script>
+}
+
+
+
+
+
+
+
+
+
+                 @*   else {
+            
+                 var substring1 = strinicial.substring(0, 1);
+                var substring2 = strinicial.substring(1, 2);
+           
+                var src1 = "/images/cartas/";
+                var src2 = "/images/cartas/";
+                src1 += substring1 + "r.png";
+                src2 += substring2 + "r.png";
+    
+              
+
+            }*@

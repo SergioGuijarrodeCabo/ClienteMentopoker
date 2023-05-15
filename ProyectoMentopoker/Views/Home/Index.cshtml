@@ -1,0 +1,249 @@
+﻿<style>
+   :root {
+    --white: #fff;
+    --black: #2e2e2e;
+    --gray: #787878;
+    --highlight: #ea8478;
+    --footer: #f7f7f7;
+    --md: 768px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: $gray;
+    background: $white;
+    text-rendering: optimizeLegibility;
+  }
+
+  ul li {
+    margin: 0 1.5rem 0 0;
+  }
+
+  a {
+    color: $gray;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  a:hover {
+    color: $black;
+  }
+
+  a.active {
+    color: $black;
+  }
+
+  nav {
+    padding: 2.5rem 0 2.5rem 0;
+  }
+
+  nav ul {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  nav li {
+    font-size: 1.25rem;
+  }
+
+  nav li:nth-child(2) {
+    margin: 0;
+  }
+
+  #highlight {
+    color: $highlight;
+    font-size: 1.25rem;
+  }
+
+  .gallery {
+    padding: 0 0 4rem 0;
+  }
+
+  .img-container {
+    width: 100%;
+    height: 500px;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .img-container:hover .img-content-hover {
+    display: block;
+  }
+
+  img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    transform: scale(1);
+    transition: all 0.3s ease-in-out;
+  }
+
+  img:hover {
+    transform: scale(1.05);
+  }
+
+  .img-content-hover {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    display: none;
+    padding: 1rem;
+    background: $white;
+    font-weight: 400;
+    margin-top: 1.25rem;
+    margin-left: -2rem;
+  }
+
+  .title {
+    color: $black;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .colorTexto{
+      color: white !important;
+  }
+
+  .category {
+    font-size: 1rem;
+    color: $gray;
+  }
+
+  .img-content {
+    display: none;
+  }
+
+  .social,
+  .copyright {
+    margin: 1rem;
+  }
+
+  .social li {
+    display: inline-block;
+  }
+
+  footer {
+    padding: 1rem 0;
+    background: $footer;
+    text-align: center;
+  }
+
+  @@media (min-width: $md) {
+    nav ul {
+      justify-content: flex-end;
+    }
+  }
+
+  @@media screen and (max-width: 1024px) {
+    img:hover {
+      transform: none;
+    }
+
+    .img-container {
+      height: 100%;
+    }
+
+    .img-container:hover .img-content-hover {
+      display: none;
+    }
+
+    .img-content {
+      display: block;
+      padding: 1rem 0;
+    }
+  }
+</style>
+
+
+
+
+<section class="gallery">
+  <div class="container">
+    <div class="grid">
+      <div class="column-xs-12 column-md-4">
+        <figure class="img-container">
+         <a class="nav-link text-white" asp-area="" asp-controller="PartidaConTabla" asp-action="Jugar"> <img src="~/images/imagenPartidas.png" /></a>
+          <figcaption class="img-content">
+            <h2 class="title colorTexto">Simulador partidas</h2>
+          </figcaption>
+          <span class="img-content-hover">
+          <h2 class="title colorTexto" >Simulador partidas</h2>
+          </span>
+        </figure>
+      </div>
+      <div class="column-xs-12 column-md-4">
+        <figure class="img-container">
+          <a class="nav-link text-white" asp-area="" asp-controller="Estadisticas" asp-action="VerPartidas"><img src="~/images/imagenStatsPartidas.png" /></a>
+          <figcaption class="img-content">
+            <h2 class="title colorTexto">Estadísticas partidas</h2>
+
+          </figcaption>
+          <span class="img-content-hover">
+            <h2 class="title colorTexto">Estadísticas partidas</h2>
+
+          </span>
+        </figure>
+      </div>
+      <div class="column-xs-12 column-md-4">
+        <figure class="img-container">
+          <a class="nav-link text-white" asp-area="" asp-controller="Estadisticas" asp-action="VerJugadas"><img src="~/images/imagenStatsJugadas.png"></a>
+          <figcaption class="img-content">
+            <h2 class="title colorTexto">Estadísticas jugadas</h2>
+
+          </figcaption>
+          <span class="img-content-hover">
+            <h2 class="title colorTexto">Estadísticas jugadas</h2>
+ 
+          </span>
+        </figure>
+      </div>
+   
+    
+  
+    </div>
+  </div>
+</section>
+
+
+@*<footer>
+  <div class="container">
+    <div class="grid">
+      <div class="column-xs-12">
+        <ul class="social">
+          <li><a href="https://twitter.com/kato_katherine" target="_blank" rel="noopener noreferrer"><span class="fab fa-twitter"></span></a></li>
+          <li><a href="https://codepen.io/kathykato" target="_blank" rel="noopener noreferrer"><span class="fab fa-codepen"></span></a></li>
+          <li><a href="https://github.com/kathykato" target="_blank" rel="noopener noreferrer"><span class="fab fa-github"></span></a></li>
+        </ul>
+        <p class="copyright">&copy; Copyright 2018 Katherine Kato</p>
+      </div>
+    </div>
+  </div>
+</footer>
+*@
+
+<script>
+
+ const imgContent = document.querySelectorAll('.img-content-hover');
+
+function showImgContent(e) {
+  for(var i = 0; i < imgContent.length; i++) {
+    x = e.pageX;
+    y = e.pageY;
+    imgContent[i].style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  }
+};
+
+document.addEventListener('mousemove', showImgContent);
+</script>

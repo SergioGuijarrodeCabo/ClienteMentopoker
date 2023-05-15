@@ -1,0 +1,135 @@
+﻿@using System.Security.Claims;
+@model List<PartidaModel>
+
+
+<!doctype html>
+<html lang="en">
+<head>
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/NavBar.css" rel="stylesheet">
+
+
+
+
+
+    <div class="container" id="encabezado" style="text-align:center">
+
+        
+
+        <!-- Custom styles for this template -->
+        <link href="~/css/navbar-top-fixed.css" rel="stylesheet">
+</head>
+<body>
+    <style>
+
+        .container {
+            background-color: transparent !important;
+        }
+
+        .container > div {
+            background-color: #212529 !important;
+            padding:50px !important;
+        }
+
+      
+
+        
+
+
+    </style>
+
+
+
+    @if
+                         (@Context.User.FindFirst(ClaimTypes.Role)?.Value == "admin")
+    {
+
+
+
+
+        <div class="container">
+
+
+
+
+
+
+            @if (Model != null)
+            {
+
+
+                <div class="table-wrapper" style="padding:50px; height: 600px; overflow: auto;">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>Partida_id</th>
+                                <th>Cash_Inicial</th>
+                                <th>Cash_Final</th>
+                                <th>Fecha</th>
+                                <th>Comentarios</th>
+                                <th>Usuario_id</th>
+                                <th>Acciones</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.Count; i += 1)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(model =>model[i].Partida_id)</td>
+                                    <td>@Html.DisplayFor(model => model[i].Cash_Inicial)</td>
+                                    <td>@Html.DisplayFor(model => model[i].Cash_Final)</td>
+                                    <td>@Html.DisplayFor(model =>model[i].Fecha)</td>
+                                    <td>@Html.DisplayFor(model => model[i].Comentarios)</td>
+                                    <td>@Html.DisplayFor(model => model[i].Usuario_id)</td>
+                                    <td>
+                                        <a class="nav-link text-white d-inline mr-3" asp-area="" asp-controller="Partidas" asp-action="Update" asp-route-partida_id="@Model[i].Partida_id"><button class="btn btn-info">Actualizar</button></a>
+                                        <a class="nav-link text-white d-inline" asp-area="" asp-controller="Partidas" asp-action="Delete" asp-route-partida_id="@Model[i].Partida_id"><button class="btn btn-info">Borrar</button></a>
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+
+
+            }
+
+
+
+        </div>
+    }
+    else
+    {
+        
+        <h1>No tienes permisos para acceder a esta funcionalidad</h1>
+    }
+
+
+</body>
+
+
+
+
+
+
+
+
+
+
+@section scripts { 
+    <script>
+
+
+           
+             
+
+
+    </script>
+}
