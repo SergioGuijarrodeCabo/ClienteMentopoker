@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClienteMentopoker.Models;
+using ClienteMentopoker.Services;
+using Microsoft.AspNetCore.Mvc;
 using ProyectoMentopoker.Filters;
 using ProyectoMentopoker.Models;
 using ProyectoMentopoker.Repositories;
@@ -8,11 +10,13 @@ namespace ProyectoMentopoker.Controllers
     {
         private RepositoryTablas repoTablas;
         private RepositoryEstadisticas repoStats;
+        private ServiceApiMentopoker service;
 
-        public EstadisticasController(RepositoryEstadisticas repoStats)
+        public EstadisticasController(RepositoryEstadisticas repoStats, ServiceApiMentopoker service)
         {
             this.repoTablas = new RepositoryTablas();
             this.repoStats = repoStats;
+            this.service = service;
         }
 
 
@@ -34,6 +38,8 @@ namespace ProyectoMentopoker.Controllers
         [HttpPost]
         public IActionResult VerPartidas(DateTime? fechaInicio = null, DateTime? fechaFinal = null)
         {
+            
+
 
             //var usuario_id = HttpContext.Session.GetString("ID");
             var usuario_id = User.FindFirst("ID")?.Value;
@@ -41,7 +47,20 @@ namespace ProyectoMentopoker.Controllers
             {
                 usuario_id = "1";
             }
-            EstadisticasPartidas stats = this.repoStats.GetEstadisticasPartidas(int.Parse(usuario_id), "partidas", fechaInicio, fechaFinal);
+
+            ClienteMentopoker.Models.PartidasRequest partidas = new PartidasRequest
+            {
+                UsuarioId = usuario_id,
+                FechaInicio = fechaInicio,
+                FechaFinal = fechaFinal
+            };
+
+            string token =
+            HttpContext.Session.GetString("TOKEN");
+
+            //NugetMentopoker.Models.EstadisticasPartidas stats = await this.service.GetEstadisticasPartidasAsync(partidas, token);
+
+            //EstadisticasPartidas stats = this.repoStats.GetEstadisticasPartidas(int.Parse(usuario_id), "partidas", fechaInicio, fechaFinal);
 
             return View(stats);
 

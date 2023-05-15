@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClienteMentopoker.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using NugetMentopoker.Models;
 using ProyectoMentopoker.Models;
 using ProyectoMentopoker.Repositories;
 
@@ -8,31 +11,45 @@ namespace ProyectoMentopoker.Controllers
     {
 
         private RepositoryEstadisticas repo { get; set; }
+        private ServiceApiMentopoker service;
 
-        public PartidasController(RepositoryEstadisticas repo) {
+        public PartidasController(RepositoryEstadisticas repo, ServiceApiMentopoker service) {
 
             this.repo = repo;
+            this.service = service;
         }
 
-        public IActionResult Crud()
+        public async Task<IActionResult> Crud()
         {
-            List<PartidaModel> partidas =  this.repo.GetAllPartidas();
-
+            string token =
+             HttpContext.Session.GetString("TOKEN");
+            //List<NugetMentopoker.Models.PartidaModel> partidas =  this.repo.GetAllPartidas();
+            List<ProyectoMentopoker.Models.PartidaModel> partidas = await this.service.GetAllPartidasAsync(token);
             return View(partidas);
         }
 
-        public IActionResult Update(string Partida_id)
+        public async Task<IActionResult> Update(string Partida_id)
         {
-            PartidaModel partida = this.repo.FindPartida(Partida_id);
+            string token =
+             HttpContext.Session.GetString("TOKEN");
+
+            //NugetMentopoker.Models.PartidaModel partida = this.repo.FindPartida(Partida_id);
+            ProyectoMentopoker.Models.PartidaModel partida = await this.service.FindPartidaAsync(token, Partida_id);
             return View(partida);
 
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Update(PartidaModel partida)
+        public async Task<IActionResult> Update(ProyectoMentopoker.Models.PartidaModel partida)
         {
-            await this.repo.UpdatePartida(partida.Partida_id, partida.Cash_Inicial, partida.Cash_Final, partida.Comentarios);
+           
+
+            string token =
+             HttpContext.Session.GetString("TOKEN");
+
+            await this.service.UpdatePartidaAsync(partida, token);
+            //await this.repo.UpdatePartida(partida.Partida_id, partida.Cash_Inicial, partida.Cash_Final, partida.Comentarios);
 
             return RedirectToAction("Crud");
 
@@ -41,7 +58,12 @@ namespace ProyectoMentopoker.Controllers
 
         public async Task<IActionResult> Delete(string Partida_id)
         {
-            await this.repo.DeletePartida(Partida_id);
+            string token =
+             HttpContext.Session.GetString("TOKEN");
+
+            await this.service.BorrarPartidasId(token, Partida_id);
+
+            //await this.repo.DeletePartida(Partida_id);
             return RedirectToAction("Crud");
 
         }
