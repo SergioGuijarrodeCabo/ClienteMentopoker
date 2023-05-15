@@ -189,6 +189,16 @@ namespace ClienteMentopoker.Services
 
         #region
 
+       
+
+
+        public async Task InsertarPartidaAsync(PartidaRequest partidaRequest, string token)
+        {
+            string request = "api/Tablas/InsertarPartida"; // Replace 'ControllerName' with the actual name of the controller handling the API endpoint
+            await this.CallApiAsync<object>(request, token, partidaRequest);
+        }
+
+
         //METODO PROTEGIDO
         public async Task<List<NugetMentopoker.Models.Celda>> GetTablaAsync(string token, int idtabla)
         {
@@ -196,14 +206,6 @@ namespace ClienteMentopoker.Services
             List<NugetMentopoker.Models.Celda> tabla =
                 await this.CallApiAsync<List<NugetMentopoker.Models.Celda>>(request, token);
             return tabla;
-        }
-
-
-
-        public async Task InsertarPartidaAsync(PartidaRequest partidaRequest, string token)
-        {
-            string request = "api/ControllerName/InsertarPartida"; // Replace 'ControllerName' with the actual name of the controller handling the API endpoint
-            await this.CallApiAsync<object>(request, token, partidaRequest);
         }
 
 
