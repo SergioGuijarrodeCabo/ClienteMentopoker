@@ -5,18 +5,18 @@ using System.Text;
 using ProyectoMentopoker.Models;
 using ClienteMentopoker.Models;
 using Newtonsoft.Json.Linq;
-
+using NugetMentopoker.Models;
 
 namespace ClienteMentopoker.Services
 {
     public class ServiceApiMentopoker
     {
         private MediaTypeWithQualityHeaderValue Header;
-        private string UrlApiEmpleados;
+        private string UrlApiMentopoker;
 
         public ServiceApiMentopoker(IConfiguration configuration)
         {
-            this.UrlApiEmpleados =
+            this.UrlApiMentopoker =
                 configuration.GetValue<string>("ApiUrls:ApiMentopoker");
             this.Header =
                 new MediaTypeWithQualityHeaderValue("application/json");
@@ -66,7 +66,7 @@ namespace ClienteMentopoker.Services
             using (HttpClient client = new HttpClient())
             {
                 string request = "/api/Login/Login";
-                client.BaseAddress = new Uri(this.UrlApiEmpleados);
+                client.BaseAddress = new Uri(this.UrlApiMentopoker);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 UsuarioRequest model = new UsuarioRequest
@@ -107,7 +107,7 @@ namespace ClienteMentopoker.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri(this.UrlApiEmpleados);
+                client.BaseAddress = new Uri(this.UrlApiMentopoker);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 HttpResponseMessage response =
@@ -130,7 +130,7 @@ namespace ClienteMentopoker.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri(this.UrlApiEmpleados);
+                client.BaseAddress = new Uri(this.UrlApiMentopoker);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 client.DefaultRequestHeaders.Add
@@ -149,15 +149,61 @@ namespace ClienteMentopoker.Services
             }
         }
 
+        private async Task<T> CallApiAsync<T>(string request, string token, object requestData = null)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(this.UrlApiMentopoker);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
+
+                HttpResponseMessage response;
+                if (requestData != null)
+                {
+
+
+                    string json = JsonConvert.SerializeObject(requestData);
+                    HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+                    response = await client.PostAsync(request, content);
+                }
+                else
+                {
+                    response = await client.GetAsync(request);
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    T data = await response.Content.ReadAsAsync<T>();
+                    return data;
+                }
+                else
+                {
+                    return default(T);
+                }
+            }
+        }
+
+
+
+
         #region
 
         //METODO PROTEGIDO
-        public async Task<List<Celda>> GetTablaAsync(string token, int idtabla)
+        public async Task<List<NugetMentopoker.Models.Celda>> GetTablaAsync(string token, int idtabla)
         {
             string request = "api/Tablas/GetTabla/"+idtabla;
-            List<Celda> tabla =
-                await this.CallApiAsync<List<Celda>>(request, token);
+            List<NugetMentopoker.Models.Celda> tabla =
+                await this.CallApiAsync<List<NugetMentopoker.Models.Celda>>(request, token);
             return tabla;
+        }
+
+
+
+        public async Task InsertarPartidaAsync(PartidaRequest partidaRequest, string token)
+        {
+            string request = "api/ControllerName/InsertarPartida"; // Replace 'ControllerName' with the actual name of the controller handling the API endpoint
+            await this.CallApiAsync<object>(request, token, partidaRequest);
         }
 
 
