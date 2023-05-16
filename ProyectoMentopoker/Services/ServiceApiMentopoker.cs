@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
-using ProyectoMentopoker.Models;
-using ClienteMentopoker.Models;
 using Newtonsoft.Json.Linq;
 using NugetMentopoker.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -199,7 +197,49 @@ namespace ClienteMentopoker.Services
                 }
             }
         }
+        #region
+        public async Task<List<PartidaModel>> GetAllPartidasAsync(string token)
+        {
+            string request = "api/Estadisticas/GetAllPartidas";
+            List<PartidaModel> partidas =
+                await this.CallApiAsync<List<PartidaModel>>(request, token);
+            return partidas;
+        }
 
+        public async Task<PartidaModel> FindPartidaAsync(string token, string id)
+        {
+            string request = "api/Estadisticas/FindPartida/"+id;
+            PartidaModel partida =
+                 await this.CallApiAsync<PartidaModel>(request, token);
+            return partida;
+        }
+
+
+        public async Task<List<NugetMentopoker.Models.ConjuntoPartidasUsuario>> GetPartidasAsync(NugetMentopoker.Models.PartidasRequest filtros, string token)
+        {
+            string request = "api/Estadisticas/GetPartidas";
+            List<NugetMentopoker.Models.ConjuntoPartidasUsuario> partidas =
+                await this.CallApiAsync<List<NugetMentopoker.Models.ConjuntoPartidasUsuario>>(request, token, filtros);
+            return partidas;
+        }
+
+        public async Task<NugetMentopoker.Models.EstadisticasPartidas> GetEstadisticasPartidasAsync(NugetMentopoker.Models.PartidasRequest filtros, string token)
+        {
+            string request = "api/Estadisticas/GetEstadisticasPartidas";
+            NugetMentopoker.Models.EstadisticasPartidas partidas =
+                await this.CallApiAsync<NugetMentopoker.Models.EstadisticasPartidas>(request, token, filtros);
+            return partidas;
+        }
+
+        public async Task<NugetMentopoker.Models.EstadisticasJugadas> GetEstadisticasJugadasAsync(NugetMentopoker.Models.PartidasRequest filtros, string token)
+        {
+            string request = "api/Estadisticas/GetEstadisticasJugadas";
+            NugetMentopoker.Models.EstadisticasJugadas partidas =
+                await this.CallApiAsync<NugetMentopoker.Models.EstadisticasJugadas>(request, token, filtros);
+            return partidas;
+        }
+
+        #endregion
 
 
 
@@ -279,7 +319,7 @@ namespace ClienteMentopoker.Services
             await this.CallApiAsync<object>(request, token);
         }
         
-        public async Task UpdatePartidaAsync(ProyectoMentopoker.Models.PartidaModel partida, string token)
+        public async Task UpdatePartidaAsync(PartidaModel partida, string token)
         {
             string request = "api/Partidas/UpdatePartida";
             await this.CallApiAsync<object>(request, token, partida);
@@ -288,48 +328,6 @@ namespace ClienteMentopoker.Services
         #endregion
 
 
-        #region
-        public async Task<List<ProyectoMentopoker.Models.PartidaModel>> GetAllPartidasAsync(string token)
-        {
-            string request = "api/Estadisticas/GetAllPartidas";
-            List<ProyectoMentopoker.Models.PartidaModel> partidas =
-                await this.CallApiAsync<List<ProyectoMentopoker.Models.PartidaModel>>(request, token);
-            return partidas;
-        }
-
-        public async Task<ProyectoMentopoker.Models.PartidaModel> FindPartidaAsync(string token, string id)
-        {
-            string request = "api/Estadisticas/FindPartida/"+id;
-            ProyectoMentopoker.Models.PartidaModel partida =
-                await this.CallApiAsync<ProyectoMentopoker.Models.PartidaModel>(request, token);
-            return partida;
-        }
-
-
-        public async Task<List<NugetMentopoker.Models.ConjuntoPartidasUsuario>> GetPartidasAsync(NugetMentopoker.Models.PartidasRequest filtros, string token)
-        {
-            string request = "api/Estadisticas/GetPartidas";
-            List<NugetMentopoker.Models.ConjuntoPartidasUsuario> partidas =
-                await this.CallApiAsync<List<NugetMentopoker.Models.ConjuntoPartidasUsuario>>(request, token, filtros);
-            return partidas;
-        }
-
-        public async Task<NugetMentopoker.Models.EstadisticasPartidas> GetEstadisticasPartidasAsync(NugetMentopoker.Models.PartidasRequest filtros, string token)
-        {
-            string request = "api/Estadisticas/GetEstadisticasPartidas";
-            NugetMentopoker.Models.EstadisticasPartidas partidas =
-                await this.CallApiAsync<NugetMentopoker.Models.EstadisticasPartidas>(request, token, filtros);
-            return partidas;
-        }
-
-        public async Task<NugetMentopoker.Models.EstadisticasJugadas> GetEstadisticasJugadasAsync(NugetMentopoker.Models.PartidasRequest filtros, string token)
-        {
-            string request = "api/Estadisticas/GetEstadisticasJugadas";
-            NugetMentopoker.Models.EstadisticasJugadas partidas =
-                await this.CallApiAsync<NugetMentopoker.Models.EstadisticasJugadas>(request, token, filtros);
-            return partidas;
-        }
-
-        #endregion
+       
     }
 }

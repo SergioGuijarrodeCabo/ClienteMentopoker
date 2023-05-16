@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProyectoMentopoker.Models;
+using NugetMentopoker.Models;
+
 
 namespace ProyectoMentopoker.Data
 {

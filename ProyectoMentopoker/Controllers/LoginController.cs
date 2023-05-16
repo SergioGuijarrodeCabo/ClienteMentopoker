@@ -1,9 +1,10 @@
-﻿using ClienteMentopoker.Models;
+﻿
 using ClienteMentopoker.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using ProyectoMentopoker.Models;
+using NugetMentopoker.Models;
+
 using ProyectoMentopoker.Repositories;
 using System.Diagnostics;
 using System.Security.Claims;

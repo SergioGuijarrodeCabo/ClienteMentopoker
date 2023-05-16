@@ -1,8 +1,8 @@
-﻿using ProyectoMentopoker.Models;
-using ProyectoMentopoker.Data;
+﻿using ProyectoMentopoker.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using ProyectoMentopoker.Helpers;
+using NugetMentopoker.Models;
 
 namespace ProyectoMentopoker.Repositories
 {

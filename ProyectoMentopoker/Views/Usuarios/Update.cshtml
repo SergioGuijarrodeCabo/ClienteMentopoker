@@ -1,5 +1,5 @@
 ﻿@using System.Security.Claims;
-@model UsuarioModel
+@model NugetMentopoker.Models.UsuarioModel
 
    @if
                          (@Context.User.FindFirst(ClaimTypes.Role)?.Value == "admin")

@@ -1,4 +1,4 @@
-namespace ProyectoMentopoker.Models
+﻿namespace ClienteMentopoker.Models
 {
     public class ErrorViewModel
     {

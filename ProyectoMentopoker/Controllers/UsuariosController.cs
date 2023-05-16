@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoMentopoker.Repositories;
-using ProyectoMentopoker.Models;
 using ProyectoMentopoker.Filters;
 using ClienteMentopoker.Services;
-using ClienteMentopoker.Models;
+using NugetMentopoker.Models;
 
 namespace ProyectoMentopoker.Controllers
 {

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using NugetMentopoker.Models;
-using ProyectoMentopoker.Models;
 using ProyectoMentopoker.Repositories;
 
 namespace ProyectoMentopoker.Controllers
@@ -24,7 +23,7 @@ namespace ProyectoMentopoker.Controllers
             string token =
              HttpContext.Session.GetString("TOKEN");
             //List<NugetMentopoker.Models.PartidaModel> partidas =  this.repo.GetAllPartidas();
-            List<ProyectoMentopoker.Models.PartidaModel> partidas = await this.service.GetAllPartidasAsync(token);
+            List<PartidaModel> partidas = await this.service.GetAllPartidasAsync(token);
             return View(partidas);
         }
 
@@ -34,14 +33,14 @@ namespace ProyectoMentopoker.Controllers
              HttpContext.Session.GetString("TOKEN");
 
             //NugetMentopoker.Models.PartidaModel partida = this.repo.FindPartida(Partida_id);
-            ProyectoMentopoker.Models.PartidaModel partida = await this.service.FindPartidaAsync(token, Partida_id);
+           PartidaModel partida = await this.service.FindPartidaAsync(token, Partida_id);
             return View(partida);
 
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Update(ProyectoMentopoker.Models.PartidaModel partida)
+        public async Task<IActionResult> Update(PartidaModel partida)
         {
            
 

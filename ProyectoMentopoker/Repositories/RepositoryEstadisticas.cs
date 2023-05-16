@@ -1,5 +1,4 @@
-﻿using ProyectoMentopoker.Models;
-using ProyectoMentopoker.Data;
+﻿using ProyectoMentopoker.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics.Metrics;
@@ -7,6 +6,7 @@ using System.Reflection.Metadata;
 using System.ComponentModel.Design;
 using System.Linq;
 using Microsoft.AspNetCore.Server.IIS.Core;
+using NugetMentopoker.Models;
 
 #region
 
