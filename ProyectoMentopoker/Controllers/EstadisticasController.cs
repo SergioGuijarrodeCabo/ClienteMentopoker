@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoMentopoker.Filters;
 using ProyectoMentopoker.Models;
 using ProyectoMentopoker.Repositories;
+
 namespace ProyectoMentopoker.Controllers
 {
     public class EstadisticasController : Controller
@@ -36,7 +37,7 @@ namespace ProyectoMentopoker.Controllers
 
 
         [HttpPost]
-        public IActionResult VerPartidas(DateTime? fechaInicio = null, DateTime? fechaFinal = null)
+        public async Task<IActionResult> VerPartidasAsync(DateTime? fechaInicio = null, DateTime? fechaFinal = null)
         {
             
 
@@ -48,7 +49,7 @@ namespace ProyectoMentopoker.Controllers
                 usuario_id = "1";
             }
 
-            ClienteMentopoker.Models.PartidasRequest partidas = new PartidasRequest
+            NugetMentopoker.Models.PartidasRequest partidas = new NugetMentopoker.Models.PartidasRequest
             {
                 UsuarioId = usuario_id,
                 FechaInicio = fechaInicio,
@@ -58,7 +59,7 @@ namespace ProyectoMentopoker.Controllers
             string token =
             HttpContext.Session.GetString("TOKEN");
 
-            //NugetMentopoker.Models.EstadisticasPartidas stats = await this.service.GetEstadisticasPartidasAsync(partidas, token);
+            NugetMentopoker.Models.EstadisticasPartidas stats = await this.service.GetEstadisticasPartidasAsync(partidas, token);
 
             //EstadisticasPartidas stats = this.repoStats.GetEstadisticasPartidas(int.Parse(usuario_id), "partidas", fechaInicio, fechaFinal);
 
@@ -83,7 +84,7 @@ namespace ProyectoMentopoker.Controllers
 
 
         [HttpPost]
-        public IActionResult VerJugadas(DateTime? fechaInicio = null, DateTime? fechaFinal = null, string? cell_id = null, int? condicion = null, double? cantidadJugada = null)
+        public async Task<IActionResult> VerJugadas(DateTime? fechaInicio = null, DateTime? fechaFinal = null, string? cell_id = null, int? condicion = null, double? cantidadJugada = null)
         {
 
 
@@ -111,7 +112,23 @@ namespace ProyectoMentopoker.Controllers
                 peticion = "jugadasCondicion";
             }
 
-            EstadisticasJugadas stats = this.repoStats.GetEstadisticasJugadas(int.Parse(usuario_id), peticion, fechaInicio, fechaFinal, cell_id, condicion, cantidadJugada);
+
+
+            NugetMentopoker.Models.PartidasRequest partidas = new NugetMentopoker.Models.PartidasRequest
+            {
+                UsuarioId = usuario_id,
+                FechaInicio = fechaInicio,
+                FechaFinal = fechaFinal
+            };
+
+            string token =
+            HttpContext.Session.GetString("TOKEN");
+
+            NugetMentopoker.Models.EstadisticasJugadas stats = await this.service.GetEstadisticasJugadasAsync(partidas, token);
+
+
+
+            //EstadisticasJugadas stats = this.repoStats.GetEstadisticasJugadas(int.Parse(usuario_id), peticion, fechaInicio, fechaFinal, cell_id, condicion, cantidadJugada);
 
             return View(stats);
 

@@ -82,14 +82,14 @@ namespace ClienteMentopoker.Services
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    UsuarioRequest usuario = JsonConvert.DeserializeObject<UsuarioRequest>(data);
+                    dynamic responseJson = JsonConvert.DeserializeObject(data);
 
-                    // Assign the relevant properties to the UsuarioRequest object
-                    model.Usuario_id = usuario.Usuario_id;
-                    model.Nombre = usuario.Nombre;
-                    model.Email = usuario.Email;
-                    model.Rol = usuario.Rol;
-                    model.Token = usuario.Token;
+                    // Extract the relevant properties from the JSON response
+                    model.Usuario_id = responseJson.response.usuario_id;
+                    model.Email = responseJson.response.email;
+                    model.Nombre = responseJson.response.nombre;
+                    model.Rol = responseJson.response.rol;
+                    model.Token = responseJson.response.token;
 
                     return model;
                 }
@@ -306,7 +306,7 @@ namespace ClienteMentopoker.Services
         }
 
 
-        public async Task<List<NugetMentopoker.Models.ConjuntoPartidasUsuario>> GetPartidasAsync(ClienteMentopoker.Models.PartidasRequest filtros, string token)
+        public async Task<List<NugetMentopoker.Models.ConjuntoPartidasUsuario>> GetPartidasAsync(NugetMentopoker.Models.PartidasRequest filtros, string token)
         {
             string request = "api/Estadisticas/GetPartidas";
             List<NugetMentopoker.Models.ConjuntoPartidasUsuario> partidas =
@@ -314,7 +314,7 @@ namespace ClienteMentopoker.Services
             return partidas;
         }
 
-        public async Task<NugetMentopoker.Models.EstadisticasPartidas> GetEstadisticasPartidasAsync(ClienteMentopoker.Models.PartidasRequest filtros, string token)
+        public async Task<NugetMentopoker.Models.EstadisticasPartidas> GetEstadisticasPartidasAsync(NugetMentopoker.Models.PartidasRequest filtros, string token)
         {
             string request = "api/Estadisticas/GetEstadisticasPartidas";
             NugetMentopoker.Models.EstadisticasPartidas partidas =
@@ -322,7 +322,7 @@ namespace ClienteMentopoker.Services
             return partidas;
         }
 
-        public async Task<NugetMentopoker.Models.EstadisticasJugadas> GetEstadisticasJugadasAsync(ClienteMentopoker.Models.PartidasRequest filtros, string token)
+        public async Task<NugetMentopoker.Models.EstadisticasJugadas> GetEstadisticasJugadasAsync(NugetMentopoker.Models.PartidasRequest filtros, string token)
         {
             string request = "api/Estadisticas/GetEstadisticasJugadas";
             NugetMentopoker.Models.EstadisticasJugadas partidas =
